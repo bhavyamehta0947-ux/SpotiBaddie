@@ -1,330 +1,590 @@
-<!DOCTYPE html>
-<html lang="en">
-    <!-- This project made by avantika and bhavya -->
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    background-color: black;
+    color: white;
+    overflow: hidden;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify - Web Player: Music for everyone</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" href="assets/logo.png">
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
+.main{
+    display: flex;
+    height: 100vh;
+    padding: 0.5rem;
+}
 
+.sidebar{
+    position: relative;
+    background-color: black;
+    width: 350px;
+    border-radius: 1rem;
+    margin-right: 0.5rem
+}
 
-<body>
-    <div class="main">  
-    <div class="sidebar">
-        <div class="nav">
-         <div class="nav-option">
-             <i class="fa-solid fa-house"></i>
-             <a href="#">Home</a>
-         </div>
-         <div class="nav-option search-option">
-             <i class="fa-solid fa-magnifying-glass"></i>
-             <a href="#">Search</a>
-         </div> 
-        </div>
-        <div class="libray">
-            <div class="options">
-             <div class="lib-option nav-option">
-             <img src="assets/library_icon.png" alt="Library icon">
-             <a href="#">Your Library</a>
-         </div>
-         <div class="icons">
-            <i class="fa-solid fa-plus"></i>
-            <i class="fa-solid fa-arrow-right"></i>
-         </div>
-            </div>
-            <div class="lib-box">
-             <div class="box">
-                <p class="box-p1">
-                 Create your first playlist
-                </p>
-                <p class="box-p2">
-                 It's easy, we'll help you
-                </p>
-                <a href="createplaylist.html"> 
-                    <button class="badge"> 
-                    Create playlist
-                    </button>
-                </a>
-             </div>
-              <div class="box">
-                <p class="box-p1">
-                 Let's find some podcasts to follow
-                </p>
-                <p class="box-p2">
-                 We'll keep you updated on new episodes
-                </p>
-                <button class="badge"> 
-                 Browse podcasts
-                </button>
-             </div>
-            </div>
-        </div>
-    </div>
+.search-option {
+    position: relative;
+    transition: left 0.2s ease, top 0.2s ease;
+}
+
+.auth-modal,
+.quiz-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.auth-card,
+.quiz-card {
+    background: #1e1e1e;
+    color: white;
+    width: min(90vw, 640px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.auth-card h2,
+.quiz-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.auth-card p {
+    margin-top: 0;
+    opacity: 0.8;
+}
+
+.login-status {
+    margin-top: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 1.2rem;
+}
+
+.login-status.success {
+    color: #1bd760;
+}
+
+.login-status.error {
+    color: #ff6b6b;
+}
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+#login-form input,
+#login-form button,
+#submit-quiz {
+    border-radius: 0.7rem;
+    border: none;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+}
+
+#login-form input {
+    background: #2b2b2b;
+    color: white;
+}
+
+#login-form button,
+#submit-quiz {
+    background: #1bd760;
+    color: black;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.quiz-card {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.quiz-question {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.quiz-question h3 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.quiz-option {
+    display: block;
+    margin: 0.35rem 0;
+    color: white;
+    cursor: pointer;
+}
+
+.quiz-result {
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #1bd760;
+}
+
+.main-containt{
+   background-color: #121212;
+   flex: 1;
+   border-radius: 1rem;
+   overflow: auto;
+   padding: 0 1.5rem 0 1.5rem;
+}
+
+.music-player{
+    background-color: black;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.nav {
+    background-color: #121212;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    padding: 0.5rem 0.7rem ;
+}
+
+.nav-option {
+    line-height: 2.5rem;
+    opacity: 0.7;
+    padding: 0.4rem 0.75rem;
+}
+
+.nav-option i {
+    font-size: 1.25rem;
+}
+
+.nav-option a {
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+.nav-option:hover {
+    opacity: 1;
+}
+
+.libray {
+    background-color: #121212;
+    border-radius: 1rem;
+    height: 100%;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.7rem ;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lib-option img {
+    height: 1.25rem;
+    width: 1.25rem;
+}
+
+.icons {
+    font-size: 1.25rem;
+    display: flex;
+}
+
+.icons i {
+    opacity: 0.7;
+    margin-right: 1rem;
+}
+
+.icons i:hover {
+    opacity: 1;
+}
+
+.box {
+    height: 8rem;
+    background-color: #232323;
+    border-radius: 0.8rem;
+    margin: 0.6rem 0 1.75rem 0;
+    padding: 0.75rem 1rem;
+}
+
+.box-p1 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.box-p2 {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.badge {
+    background-color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 0.25rem 1rem;
+    font-weight: 700;
+    margin: 0.5rem;
+    height: 2rem;
+    width: fit-content;
+}
+
+.dark-badge {
+    background-color: black;
+    color: white;
+}
+
+.sticky-nav {
+    position: sticky;
+    top: 0%;
+    background-color: #121212;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0 1rem 0;
+    z-index: 10;
+}
+
+.sticky-nav-icon {
+    margin-left: 0.75rem;
+}
+
+.sticky-nav-icon i {
+    background-color: #090909;
+    padding: 0.4rem 0.5rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+.menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.stcky-nav-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stcky-nav-option button {
+    margin-right: 1.5rem; 
+}
+
+@media (max-width: 1000px){
+    .hide {
+        display: none;
+    }
+}
+
+.nav-item {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.card {
+    background-color: #1e1e1e;
+    width: 155px;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-right: 1.5rem;
     
-<div class="main-containt">
-    <div class="sticky-nav">
-        <div class="sticky-nav-icon">
-            <i class="fa-solid fa-angle-left"></i>
-            <i class="fa-solid fa-angle-right hide"></i>
-        </div>
-        <div class="stcky-nav-option">
-            <button class="badge dark-badge hide"> 
-                Explore Premium
-            </button>
-            <button class="badge dark-badge"> 
-                <i class="fa-regular fa-circle-down" style="margin-right: 0.5rem;"></i> Install App
-            </button>
-            <i class="fa-regular fa-user nav-item"></i>
-        </div>
-    </div>
+}
 
-    <h2>Recently Played</h2>
-    <div class="cards-container">
-        <div class="card">
-            <img src="assets/card1img.jpeg" class="card-img">
-            <p class="card-title">Top 50 - Global</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-    </div>
-    
-    <h2>Trending now near you</h2>
-    <div class="cards-container">
-        <div class="card">
-            <img src="assets/card2img.jpeg" class="card-img">
-            <p class="card-title">Mahiye Jina Sona</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card3img.jpeg" class="card-img">
-            <p class="card-title">Mere Pass Tum Ho</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card4img.jpeg" class="card-img">
-            <p class="card-title">Leo Naa Ready</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card5img.jpeg" class="card-img">
-            <p class="card-title">Top 50 - Global</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-    </div>
-    <h2>Trending now near you</h2>
-    <div class="cards-container">
-        <div class="card">
-            <img src="assets/card6img.jpeg" class="card-img">
-            <p class="card-title">Top Song In India</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card1img.jpeg" class="card-img">
-            <p class="card-title">Top 50 - Global</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card2img.jpeg" class="card-img">
-            <p class="card-title">Mahiye Jina Sona</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-        <div class="card">
-            <img src="assets/card3img.jpeg" class="card-img">
-            <p class="card-title">Mere Pass Tum Ho</p>
-            <p class="card-info">Your daily updates of the most played...</p>
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div class="line"></div>
-    </div>
-</div>    
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
 
-<div class="music-player">
-    <div class="album">
-        <img src="assets/card1img.jpeg" class="album-img">
-        <div class="album-info">
-            <p class="title">Fine Shyt</p>
-            <p class="artist">Guru Randhawa</p>
-        </div>
-        <i class="fa-regular fa-heart"></i>
-    </div>
-    <div class="player">
-        <div class="player-controls">
-            <img id="player-photo" src="assets/magicgenie.png" alt="Play" class="player-photo">
-        </div>
-        <div class="playback-bar">
-            <span class="curr-time">00:00</span>
-            <input type="range" min="0" max="100" class="progress-bar" step="1">
-            <span class="total-time">01:38</span>
-        </div>
-    </div>
-    <div class="controls">
-        <i class="fa-solid fa-list-ul controls-icon"></i>
-        <i class="fa-solid fa-display controls-icon"></i>
-        <!-- volume widget (replaces simple range) -->
-        <div class="volume-widget">
-            <h4 class="volume-title">Volume: <span id="volume-perc">50</span>%</h4>
-            <div id="vc-slider-container" class="transition" aria-hidden="false">
-                <input id="vc-slider" disabled type="range" value="50">
-            </div>
-        </div>
-        <!-- hidden audio element controlled by the widget -->
-        <audio id="audio" style="display:none" preload="auto"></audio>
-    </div>
-</div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sidebar = document.querySelector('.sidebar');
-        const searchOption = document.querySelector('.nav-option.search-option');
-        const searchLink = searchOption?.querySelector('a');
+.card-img {
+    width: 100%;
+    border-radius: 0.5rem;
+}
 
-        if (sidebar && searchOption && searchLink) {
-            searchOption.style.position = 'relative';
-            searchOption.style.transition = 'left 0.2s ease, top 0.2s ease';
+.card-title {
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
 
-            document.addEventListener('mousemove', (event) => {
-                const optionRect = searchOption.getBoundingClientRect();
-                const distance = Math.hypot(
-                    event.clientX - (optionRect.left + optionRect.width / 2),
-                    event.clientY - (optionRect.top + optionRect.height / 2)
-                );
+.card-info {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
 
-                if (distance < 120) {
-                    const maxLeft = Math.max(sidebar.offsetWidth - optionRect.width - 18, 0);
-                    const maxTop = Math.max(sidebar.offsetHeight - optionRect.height - 18, 0);
+.footer {
+    height: 15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-                    searchOption.style.position = 'absolute';
-                    searchOption.style.left = `${Math.random() * maxLeft}px`;
-                    searchOption.style.top = `${Math.random() * maxTop}px`;
-                }
-            });
-        }
+.line {
+    width: 90%;
+    height: 50%;
+    border-top: 1px solid white;
+    opacity: 0.4;
+}
 
-        /* Volume widget logic ported from WorstVolumeControl's VolumeSlider.vue */
-        const FRAME_RATE = 60;
-        const g = 0.2 / FRAME_RATE;
-        const audio = document.getElementById('audio');
-        const container = document.getElementById('vc-slider-container');
-        const slider = document.getElementById('vc-slider');
-        const perc = document.getElementById('volume-perc');
+.music-player{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}
 
-        let timer = null;
-        let isDragging = false;
-        let centerX = 0, centerY = 0;
-        let u = 0, v = 0, angleOffset = 0, angle = 0;
-        let baseVolume = 0.5;
+.album {
+    width: 25%;
+    display: flex;
+    align-items: center;
+}
 
-        if (audio) {
-            // sensible default
-            audio.volume = 0.5;
-            baseVolume = audio.volume;
-            if (perc) perc.textContent = Math.round(baseVolume * 100);
-            if (slider) slider.value = Math.round(baseVolume * 100);
-        }
+.album-img {
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 0.3rem;
+    margin-right: 1rem;
+}
 
-        function updateVolume() {
-            u = Math.sin(angle) * g;
-            v += u;
-            let currentVolume = baseVolume + v;
-            if (currentVolume > 1 || currentVolume < 0) {
-                currentVolume = Math.max(0, Math.min(1, currentVolume));
-                v = 0;
-            }
-            if (audio) audio.volume = currentVolume;
-            if (perc) perc.textContent = Math.round(currentVolume * 100);
-            if (slider) slider.value = Math.round(currentVolume * 100);
-        }
+.album-info {
+    font-size: 0.8rem;
+    margin-right: 1rem;
+}
 
-        function getPointFromEvent(e) {
-            if (e.touches && e.touches.length) {
-                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            }
-            return { x: e.clientX, y: e.clientY };
-        }
+.album-info .title {
+    font-weight: 700;
+    margin: 0;
+}
 
-        function onMouseDown(e) {
-            if (!container) return;
-            isDragging = true;
-            const p = getPointFromEvent(e);
-            const bounds = container.getBoundingClientRect();
-            centerX = (bounds.left + bounds.right) / 2;
-            centerY = (bounds.top + bounds.bottom) / 2;
-            angleOffset = Math.atan2(p.y - centerY, p.x - centerX);
-            baseVolume = audio ? audio.volume : baseVolume;
-            timer = setInterval(updateVolume, 1000 / FRAME_RATE);
-            // prevent native drag selections
-            e.preventDefault();
-        }
+.album-info .artist {
+    opacity: 0.8;
+    margin: 0;
+}
 
-        function onMouseMove(e) {
-            if (!isDragging || !container) return;
-            const p = getPointFromEvent(e);
-            angle = Math.atan2(p.y - centerY, p.x - centerX) - angleOffset;
-            container.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
-        }
+.album i {
+    opacity: 0.8;
+}
 
-        function endDrag() {
-            isDragging = false;
-            if (timer) { clearInterval(timer); timer = null; }
-            u = 0; v = 0; angle = 0;
-            if (container) container.style.transform = 'rotate(0)';
-        }
+.album i:hover {
+    opacity: 1;
+}
 
-        // events
-        if (container) {
-            container.addEventListener('mousedown', onMouseDown);
-            container.addEventListener('touchstart', onMouseDown, { passive: false });
-        }
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('touchmove', onMouseMove, { passive: false });
-        document.addEventListener('mouseup', endDrag);
-        document.addEventListener('touchend', endDrag);
+.player {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        /* player photo click: swap to a random player_icon (1-5) */
-        const playerPhoto = document.getElementById('player-photo');
-        const playerIcons = [
-            'assets/player_icon1.png',
-            'assets/player_icon2.png',
-            'assets/player_icon3.png',
-            'assets/player_icon4.png',
-            'assets/player_icon5.png'
-        ];
-        if (playerPhoto) {
-            playerPhoto.addEventListener('click', async () => {
-                const idx = Math.floor(Math.random() * playerIcons.length);
-                const chosen = playerIcons[idx];
-                playerPhoto.src = chosen;
-                try {
-                    playerPhoto.animate([
-                        { transform: 'scale(1)' },
-                        { transform: 'scale(1.12)' },
-                        { transform: 'scale(1)' }
-                    ], { duration: 180 });
-                } catch (e) { /* animation unsupported */ }
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-                // If the chosen image is player_icon3, play the Guru Randhawa track.
-                // Use an included fallback audio if a dedicated guru file isn't present.
-                const isIcon3 = chosen.endsWith('player_icon3.png') || chosen.indexOf('player_icon3') !== -1;
-                if (isIcon3 && audio) {
-                    const srcToUse = 'assets/guru_randhawa.mp3';
-                    if (audio.src !== srcToUse) {
-                        audio.src = srcToUse;
-                    }
-                    try { await audio.play(); } catch (e) { /* autoplay may be blocked */ }
-                } else if (audio) {
-                    try { audio.pause(); } catch (e) {}
-                }
-            });
-        }
-    });
-</script>
-</body>
-</html>
+.player-icon {
+    font-size: 1rem;
+    margin: 0 1.25rem;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.player-icon:hover {
+    opacity: 1;
+}
+
+/* user's play image replacement */
+.player-photo {
+    margin: 0 1.25rem;
+    opacity: 0.9;
+    cursor: pointer;
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    object-fit: contain;
+}
+.player-photo:hover { opacity: 1; }
+
+.playback-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.progress-bar {
+    width: 70%;
+    appearance: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.progress-bar::-webkit-slider-runnable-track {
+    background-color: #ddd;
+    border-radius: 100px;
+    height: 0.2rem;
+}
+
+.progress-bar::-webkit-slider-thumb {
+    appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background-color: #1bd760;
+    border-radius: 50%;
+    margin-top: -6px;
+}
+
+.controls {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.controls-icon {
+    opacity: 0.7;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.controls-icon:hover {
+    opacity: 1;
+}
+
+.volume-bar {
+    width: 6rem;
+    appearance: none;
+    cursor: pointer;
+}
+
+.volume-bar::-webkit-slider-runnable-track {
+    background-color: #ddd;
+    border-radius: 100px;
+    height: 0.2rem;
+}
+
+.volume-bar::-webkit-slider-thumb {
+    appearance: none;
+    height: 0.7rem;
+    width: 0.7rem;
+    background-color: #fff;
+    border-radius: 50%;
+    margin-top: -3px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+    .menu-btn {
+        display: block;
+    }
+    /* Sidebar hidden by default on small screens, slides in when `body.sidebar-open` */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        bottom: 72px; /* leave space for player */
+        width: 280px;
+        max-width: 50%;
+        display: block;
+        margin: 0;
+        border-radius: 0 0.8rem 0.8rem 0;
+        transition: left 0.25s ease;
+        z-index: 40;
+    }
+    body.sidebar-open .sidebar {
+        left: 0;
+    }
+    .sidebar-overlay {
+        display: none;
+    }
+    body.sidebar-open .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0 0 72px 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 30;
+    }
+    .main{
+        flex-direction: column;
+        padding-bottom: 88px; /* a bit more space on small screens */
+    }
+    .album {
+        width: 40%;
+    }
+    .controls {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .card { width: 140px; }
+    .player-icon { margin: 0 0.5rem; }
+    .progress-bar { width: 60%; }
+    .album-img { height: 2.5rem; width: 2.5rem; }
+}
+
+/* Volume widget styles (ported and namespaced) */
+.volume-widget {
+    display: flex;
+    align-items: center;
+}
+.volume-title {
+    margin: 0 0.5rem 0 0;
+    font-size: 0.9rem;
+}
+#vc-slider-container {
+    background: #1e1e1e;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    cursor: grab;
+    border-radius: 6px;
+}
+#vc-slider-container.transition {
+    transition-timing-function: ease-out;
+    transition: transform 0.3s;
+}
+#vc-slider {
+    width: 120px;
+}
+input[type=range]#vc-slider:disabled::-webkit-slider-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+input[type=range]#vc-slider:disabled::-moz-range-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+input[type=range]#vc-slider:disabled::-ms-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+    .volume-widget { display: none; }
+}
