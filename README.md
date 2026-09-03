@@ -1,25 +1,21 @@
 # 🎵 Spotify Clone  
 
-<p align="center">
-  <img src="assets/preview.png" alt="Spotify Clone Preview" width="800"/>
-</p>  
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)  
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)  
-
 A simple **Spotify Clone** built using **HTML** and **CSS**.  
-This project replicates the basic UI of Spotify with a responsive design and clean styling.  
+this project is a clone/component of Spotify with the most inconvenient, agonizing, and hilariously terrible UI you can design.
 
 ---
 
 ## 🚀 Features  
-- 🎨 Spotify-inspired UI  
-- 📱 Responsive design (works on desktop & mobile)  
-- 🎶 Music player layout with controls  
-- 🔍 Sidebar navigation & playlists section  
-- 🌑 Dark theme styling  
+-Search button that runs away from the cursor
+-Rotating volume slider that relies on gravity to adjust the volume
+-Play a shuffle previous song next song and loop functions all combined into 
+a single genie button that chooses one function at random
+-A playlist that only allows to add one song and does not let you remove that song
+-Login quiz button tilt which rotates 180 degrees while logging and 10 quiz questions
 
----
+## Login Details
+Username: admin@music.com
+Password: music@123
 
 ## 🛠️ Tech Stack  
 - **HTML5**  
@@ -29,8 +25,11 @@ This project replicates the basic UI of Spotify with a responsive design and cle
 
 ## 📂 Project Structure  
 
-spotify-clone/  
-│── index.html        # Main HTML file  
-│── style.css         # CSS file for styling  
-│── assets/           # Images, icons, and other assets  
-└── README.md         # Project documentation  
+SpotiBaddie 
+-assets
+-DS_Store
+-gitignore
+-README.md
+-createplaylist.html
+-index.html
+-style.css 
