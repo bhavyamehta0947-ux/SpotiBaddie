@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!-- This project made by sahil -->
+    <!-- This project made by avantika and bhavya -->
 
 <head>
     <meta charset="UTF-8">
@@ -170,40 +170,126 @@
     <div class="controls">
         <i class="fa-solid fa-list-ul controls-icon"></i>
         <i class="fa-solid fa-display controls-icon"></i>
-        <i class="fa-solid fa-volume-high controls-icon"></i>
-        <input type="range" class="volume-bar">
+        <!-- volume widget (replaces simple range) -->
+        <div class="volume-widget">
+            <h4 class="volume-title">Volume: <span id="volume-perc">50</span>%</h4>
+            <div id="vc-slider-container" class="transition" aria-hidden="false">
+                <input id="vc-slider" disabled type="range" value="50">
+            </div>
+        </div>
+        <!-- hidden audio element controlled by the widget -->
+        <audio id="audio" style="display:none" preload="auto"></audio>
     </div>
 </div>
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.querySelector('.sidebar');
-    const searchOption = document.querySelector('.nav-option.search-option');
-    const searchLink = searchOption?.querySelector('a');
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('.sidebar');
+        const searchOption = document.querySelector('.nav-option.search-option');
+        const searchLink = searchOption?.querySelector('a');
 
-    if (!sidebar || !searchOption || !searchLink) return;
+        if (sidebar && searchOption && searchLink) {
+            searchOption.style.position = 'relative';
+            searchOption.style.transition = 'left 0.2s ease, top 0.2s ease';
 
-    searchOption.style.position = 'relative';
-    searchOption.style.transition = 'left 0.2s ease, top 0.2s ease';
+            document.addEventListener('mousemove', (event) => {
+                const optionRect = searchOption.getBoundingClientRect();
+                const distance = Math.hypot(
+                    event.clientX - (optionRect.left + optionRect.width / 2),
+                    event.clientY - (optionRect.top + optionRect.height / 2)
+                );
 
-    document.addEventListener('mousemove', (event) => {
-      const optionRect = searchOption.getBoundingClientRect();
-      const distance = Math.hypot(
-        event.clientX - (optionRect.left + optionRect.width / 2),
-        event.clientY - (optionRect.top + optionRect.height / 2)
-      );
+                if (distance < 120) {
+                    const maxLeft = Math.max(sidebar.offsetWidth - optionRect.width - 18, 0);
+                    const maxTop = Math.max(sidebar.offsetHeight - optionRect.height - 18, 0);
 
-      if (distance < 120) {
-        const maxLeft = Math.max(sidebar.offsetWidth - optionRect.width - 18, 0);
-        const maxTop = Math.max(sidebar.offsetHeight - optionRect.height - 18, 0);
+                    searchOption.style.position = 'absolute';
+                    searchOption.style.left = `${Math.random() * maxLeft}px`;
+                    searchOption.style.top = `${Math.random() * maxTop}px`;
+                }
+            });
+        }
 
-        searchOption.style.position = 'absolute';
-        searchOption.style.left = `${Math.random() * maxLeft}px`;
-        searchOption.style.top = `${Math.random() * maxTop}px`;
-      }
+        /* Volume widget logic ported from WorstVolumeControl's VolumeSlider.vue */
+        const FRAME_RATE = 60;
+        const g = 0.2 / FRAME_RATE;
+        const audio = document.getElementById('audio');
+        const container = document.getElementById('vc-slider-container');
+        const slider = document.getElementById('vc-slider');
+        const perc = document.getElementById('volume-perc');
+
+        let timer = null;
+        let isDragging = false;
+        let centerX = 0, centerY = 0;
+        let u = 0, v = 0, angleOffset = 0, angle = 0;
+        let baseVolume = 0.5;
+
+        if (audio) {
+            // sensible default
+            audio.volume = 0.5;
+            baseVolume = audio.volume;
+            if (perc) perc.textContent = Math.round(baseVolume * 100);
+            if (slider) slider.value = Math.round(baseVolume * 100);
+        }
+
+        function updateVolume() {
+            u = Math.sin(angle) * g;
+            v += u;
+            let currentVolume = baseVolume + v;
+            if (currentVolume > 1 || currentVolume < 0) {
+                currentVolume = Math.max(0, Math.min(1, currentVolume));
+                v = 0;
+            }
+            if (audio) audio.volume = currentVolume;
+            if (perc) perc.textContent = Math.round(currentVolume * 100);
+            if (slider) slider.value = Math.round(currentVolume * 100);
+        }
+
+        function getPointFromEvent(e) {
+            if (e.touches && e.touches.length) {
+                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        function onMouseDown(e) {
+            if (!container) return;
+            isDragging = true;
+            const p = getPointFromEvent(e);
+            const bounds = container.getBoundingClientRect();
+            centerX = (bounds.left + bounds.right) / 2;
+            centerY = (bounds.top + bounds.bottom) / 2;
+            angleOffset = Math.atan2(p.y - centerY, p.x - centerX);
+            baseVolume = audio ? audio.volume : baseVolume;
+            timer = setInterval(updateVolume, 1000 / FRAME_RATE);
+            // prevent native drag selections
+            e.preventDefault();
+        }
+
+        function onMouseMove(e) {
+            if (!isDragging || !container) return;
+            const p = getPointFromEvent(e);
+            angle = Math.atan2(p.y - centerY, p.x - centerX) - angleOffset;
+            container.style.transform = `rotate(${angle * 180 / Math.PI}deg)`;
+        }
+
+        function endDrag() {
+            isDragging = false;
+            if (timer) { clearInterval(timer); timer = null; }
+            u = 0; v = 0; angle = 0;
+            if (container) container.style.transform = 'rotate(0)';
+        }
+
+        // events
+        if (container) {
+            container.addEventListener('mousedown', onMouseDown);
+            container.addEventListener('touchstart', onMouseDown, { passive: false });
+        }
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('touchmove', onMouseMove, { passive: false });
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
     });
-  });
 </script>
 </body>
- <!-- This project made by sahil -->
 </html>
