@@ -348,6 +348,7 @@
         }
 
         const loginModal = document.getElementById('login-modal');
+        const authCard = document.querySelector('.auth-card');
         const quizModal = document.getElementById('music-quiz-modal');
         const loginForm = document.getElementById('login-form');
         const loginStatus = document.getElementById('login-status');
@@ -389,6 +390,20 @@
         if (profileIcon) {
             profileIcon.addEventListener('click', () => {
                 if (loginModal) loginModal.classList.remove('hidden');
+            });
+        }
+
+        if (authCard) {
+            const tiltInputs = authCard.querySelectorAll('input');
+            tiltInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    authCard.classList.remove('input-tilt-cw', 'input-tilt-ccw');
+                    void authCard.offsetWidth;
+                    authCard.classList.add(index % 2 === 0 ? 'input-tilt-cw' : 'input-tilt-ccw');
+                    setTimeout(() => {
+                        authCard.classList.remove('input-tilt-cw', 'input-tilt-ccw');
+                    }, 450);
+                });
             });
         }
 
