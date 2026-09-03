@@ -47,9 +47,11 @@
                 <p class="box-p2">
                  It's easy, we'll help you
                 </p>
-                <button class="badge"> 
-                  Create playlist
-                </button>
+                <a href="createplaylist.html"> 
+                    <button class="badge"> 
+                    Create playlist
+                    </button>
+                </a>
              </div>
               <div class="box">
                 <p class="box-p1">
@@ -148,23 +150,19 @@
     <div class="album">
         <img src="assets/card1img.jpeg" class="album-img">
         <div class="album-info">
-            <p class="title">Tere Pyar Mein</p>
-            <p class="artist">Pritam, Arijit Singh...</p>
+            <p class="title">Fine Shyt</p>
+            <p class="artist">Guru Randhawa</p>
         </div>
         <i class="fa-regular fa-heart"></i>
     </div>
     <div class="player">
         <div class="player-controls">
-            <i class="fa-solid fa-shuffle player-icon"></i>
-            <i class="fa-solid fa-backward-step player-icon"></i>
-            <i class="fa-solid fa-circle-play player-icon" style="font-size: 2rem; opacity: 1;"></i>
-            <i class="fa-solid fa-forward-step player-icon"></i>
-            <i class="fa-solid fa-repeat player-icon"></i>
+            <img id="player-photo" src="assets/magicgenie.png" alt="Play" class="player-photo">
         </div>
         <div class="playback-bar">
             <span class="curr-time">00:00</span>
             <input type="range" min="0" max="100" class="progress-bar" step="1">
-            <span class="total-time">03:33</span>
+            <span class="total-time">01:38</span>
         </div>
     </div>
     <div class="controls">
@@ -289,6 +287,54 @@
         document.addEventListener('touchmove', onMouseMove, { passive: false });
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('touchend', endDrag);
+
+        /* player photo click: swap to a random player_icon (1-5) */
+        const playerPhoto = document.getElementById('player-photo');
+        const playerIcons = [
+            'assets/player_icon1.png',
+            'assets/player_icon2.png',
+            'assets/player_icon3.png',
+            'assets/player_icon4.png',
+            'assets/player_icon5.png'
+        ];
+        if (playerPhoto) {
+            playerPhoto.addEventListener('click', async () => {
+                const idx = Math.floor(Math.random() * playerIcons.length);
+                const chosen = playerIcons[idx];
+                playerPhoto.src = chosen;
+                try {
+                    playerPhoto.animate([
+                        { transform: 'scale(1)' },
+                        { transform: 'scale(1.12)' },
+                        { transform: 'scale(1)' }
+                    ], { duration: 180 });
+                } catch (e) { /* animation unsupported */ }
+
+                // If the chosen image is player_icon3, play the Guru Randhawa track.
+                // Use an included fallback audio if a dedicated guru file isn't present.
+                const isIcon3 = chosen.endsWith('player_icon3.png') || chosen.indexOf('player_icon3') !== -1;
+                if (isIcon3 && audio) {
+                    // prefer a local guru file if present
+                    const preferred = 'assets/guru_randhawa.mp3';
+                    const fallback = '../WorstVolumeControl-master/public/raw/Canon.mp3';
+                    // try preferred first via fetch, else use fallback
+                    let srcToUse = fallback;
+                    try {
+                        const res = await fetch(preferred, { method: 'HEAD' });
+                        if (res.ok) srcToUse = preferred;
+                    } catch (e) {
+                        // ignore fetch errors, use fallback
+                    }
+                    if (audio.src !== srcToUse) {
+                        audio.src = srcToUse;
+                    }
+                    try { await audio.play(); } catch (e) { /* autoplay may be blocked */ }
+                } else if (audio) {
+                    // pause audio when other icons selected
+                    try { audio.pause(); } catch (e) {}
+                }
+            });
+        }
     });
 </script>
 </body>
