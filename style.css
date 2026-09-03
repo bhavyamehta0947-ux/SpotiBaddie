@@ -167,6 +167,16 @@ a {
     font-size: 0.8rem;
 }
 
+.menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
 .stcky-nav-option {
     display: flex;
     justify-content: center;
@@ -365,4 +375,96 @@ a {
     background-color: #fff;
     border-radius: 50%;
     margin-top: -3px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+    .menu-btn {
+        display: block;
+    }
+    /* Sidebar hidden by default on small screens, slides in when `body.sidebar-open` */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        bottom: 72px; /* leave space for player */
+        width: 280px;
+        max-width: 50%;
+        display: block;
+        margin: 0;
+        border-radius: 0 0.8rem 0.8rem 0;
+        transition: left 0.25s ease;
+        z-index: 40;
+    }
+    body.sidebar-open .sidebar {
+        left: 0;
+    }
+    .sidebar-overlay {
+        display: none;
+    }
+    body.sidebar-open .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0 0 72px 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 30;
+    }
+    .main{
+        flex-direction: column;
+        padding-bottom: 88px; /* a bit more space on small screens */
+    }
+    .album {
+        width: 40%;
+    }
+    .controls {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .card { width: 140px; }
+    .player-icon { margin: 0 0.5rem; }
+    .progress-bar { width: 60%; }
+    .album-img { height: 2.5rem; width: 2.5rem; }
+}
+
+/* Volume widget styles (ported and namespaced) */
+.volume-widget {
+    display: flex;
+    align-items: center;
+}
+.volume-title {
+    margin: 0 0.5rem 0 0;
+    font-size: 0.9rem;
+}
+#vc-slider-container {
+    background: #1e1e1e;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    cursor: grab;
+    border-radius: 6px;
+}
+#vc-slider-container.transition {
+    transition-timing-function: ease-out;
+    transition: transform 0.3s;
+}
+#vc-slider {
+    width: 120px;
+}
+input[type=range]#vc-slider:disabled::-webkit-slider-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+input[type=range]#vc-slider:disabled::-moz-range-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+input[type=range]#vc-slider:disabled::-ms-thumb {
+    box-shadow: 2px 2px 2px #000000, 0px 0px 2px #0d0d0d;
+    border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+    .volume-widget { display: none; }
 }
