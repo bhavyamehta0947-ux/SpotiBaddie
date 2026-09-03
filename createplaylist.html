@@ -21,7 +21,7 @@
         <div class="nav">
          <div class="nav-option">
              <i class="fa-solid fa-house"></i>
-             <a href="index.html">Home</a>
+             <a href="#">Home</a>
          </div>
          <div class="nav-option search-option">
              <i class="fa-solid fa-magnifying-glass"></i>
@@ -132,6 +132,9 @@
 <!-- why popup (hidden) -->
 <div id="why-popup" class="why-popup hidden">Why? :(</div>
 
+<!-- hidden audio element for track playback -->
+<audio id="audio" style="display:none" preload="auto"></audio>
+
 <script>
 document.addEventListener('click', function(e){
     const more = e.target.closest('[data-testid="more-button"]');
@@ -211,6 +214,23 @@ document.addEventListener('click', function(e){
         return;
     }
 });
+</script>
+
+<script>
+// Wire track play buttons to play a local guru_randhawa track
+(() => {
+    const audio = document.getElementById('audio');
+    if (!audio) return;
+    const playButtons = document.querySelectorAll('.uguMZhYNPFPT0K39gHNI');
+    playButtons.forEach(btn => {
+        btn.addEventListener('click', async (ev) => {
+            ev.stopPropagation();
+            const src = 'assets/guru_randhawa.mp3';
+            if (!audio.src || !audio.src.includes('guru_randhawa.mp3')) audio.src = src;
+            try { await audio.play(); } catch (e) { /* autoplay may be blocked by browser */ }
+        });
+    });
+})();
 </script>
 
 </body>
