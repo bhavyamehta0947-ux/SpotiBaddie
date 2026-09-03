@@ -44,6 +44,32 @@ body {
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+}
+
+.auth-card.input-tilt-ccw {
+    animation: tiltCCW 0.45s ease-in-out;
+}
+
+.auth-card.input-tilt-cw {
+    animation: tiltCW 0.45s ease-in-out;
+}
+
+@keyframes tiltCCW {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-180deg); }
+    50% { transform: rotate(-90deg); }
+    75% { transform: rotate(-180deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes tiltCW {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(180deg); }
+    50% { transform: rotate(90deg); }
+    75% { transform: rotate(180deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .auth-card h2,
